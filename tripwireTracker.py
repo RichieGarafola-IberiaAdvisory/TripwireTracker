@@ -2,6 +2,8 @@ import os
 import pandas as pd
 import streamlit as st
 from openpyxl import Workbook
+import base64
+from io import BytesIO
 
 # Set the page configuration for the Streamlit application, including the title and icon.
 st.set_page_config(
