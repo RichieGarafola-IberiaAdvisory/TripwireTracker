@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import streamlit as st
+from openpyxl import Workbook
 
 # Set the page configuration for the Streamlit application, including the title and icon.
 st.set_page_config(
@@ -115,16 +116,33 @@ if check_password():
         st.subheader("Processed Data")
         st.dataframe(result_df)
 
+#         # Input field for Excel file name
+#         excel_filename = st.text_input("Enter Excel File Name (without extension)", "filtered_hourly_cost")
+
+#         # Save to Excel button
+#         if st.button('Save Data to Excel'):
+#             # Get the path to the user's downloads folder
+#             downloads_folder = os.path.expanduser("~/Downloads")
+#             excel_file_path = os.path.join(downloads_folder, f"{excel_filename}.xlsx")
+
+#             with pd.ExcelWriter(excel_file_path, engine='xlsxwriter') as writer:
+#                 result_df.to_excel(writer, index=False)
+
+#             st.success(f"Data saved to '{excel_file_path}'")
+
         # Input field for Excel file name
         excel_filename = st.text_input("Enter Excel File Name (without extension)", "filtered_hourly_cost")
 
         # Save to Excel button
         if st.button('Save Data to Excel'):
-            # Get the path to the user's downloads folder
-            downloads_folder = os.path.expanduser("~/Downloads")
-            excel_file_path = os.path.join(downloads_folder, f"{excel_filename}.xlsx")
+            # Save the filtered dataframe to an Excel file in memory
+            excel_buffer = BytesIO()
+            result_df.to_excel(excel_buffer, index=False)
+            excel_data = excel_buffer.getvalue()
 
-            with pd.ExcelWriter(excel_file_path, engine='xlsxwriter') as writer:
-                result_df.to_excel(writer, index=False)
+            # Generate a download link for the Excel file
+            b64 = base64.b64encode(excel_data).decode('utf-8')
+            excel_filename = f"{excel_filename}.xlsx"
+            href = f'<a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="{excel_filename}">Download Excel File</a>'
+            st.markdown(href, unsafe_allow_html=True)
 
-            st.success(f"Data saved to '{excel_file_path}'")
