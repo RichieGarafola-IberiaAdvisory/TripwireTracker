@@ -6,7 +6,7 @@ The Tripwire Tracker App is a Python script designed to process data from Excel 
 
 Deployed links:
 
-**Updated with "Final Approval" column:**
+Updated with "Final Approval" column: 
 
 https://tripwire.streamlit.app/
 
@@ -86,10 +86,6 @@ Data Import
 
 **Map LCAT:** Maps the "PLC Desc" column in the hourly cost data to get corrected LCAT syntax.
 
-### Output
-
-Creates a final DataFrame with desired columns showing the filtered and mapped data and prints the result.
-
 ---
 
 ## How to Run
@@ -99,6 +95,12 @@ To run the Tripwire Tracker App, follow these steps:
     - Ensure you have the required dependencies installed (pandas and openpyxl).
     - Place the Excel files ("Onboarding_Tracker.xlsx" and "hourly_cost.xlsx") in the same directory as the script.
     - Run the script, and it will process the data and provide the output.
+
+---
+
+### Output
+
+Creates a final DataFrame with desired columns showing the filtered and mapped data and prints the result.
 
 ---
 ---
