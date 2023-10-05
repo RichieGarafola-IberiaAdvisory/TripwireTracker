@@ -5,8 +5,16 @@ The Tripwire Tracker App is a Python script designed to process data from Excel 
 ---
 
 Deployed links:
-Updated with "Final Approval" column: https://tripwire.streamlit.app/
-Original version using "SES Y/N - recommend allowing to exceed tripwire" column: https://tripwiretracker.streamlit.app/
+
+Updated with "Final Approval" column: 
+
+https://tripwire.streamlit.app/
+
+
+
+Original version using "SES Y/N - recommend allowing to exceed tripwire" column: 
+
+https://tripwiretracker.streamlit.app/
 
 ---
 
