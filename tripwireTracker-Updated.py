@@ -67,7 +67,10 @@ if check_password():
     hourly_cost_file = st.file_uploader("Upload Hourly Cost Excel File", type=["xlsx"])
     hourly_cost_sheet_name = st.text_input("Enter Hourly Cost Sheet Name:")
 
+
     if tracker_file is not None and hourly_cost_file is not None:
+        # Create a loading spinner widget to indicate data processing
+        with st.spinner("Processing data..."):
         # Read the uploaded Excel files into Pandas DataFrames
         tracker_df = pd.read_excel(tracker_file, sheet_name='Tripwire Tracker')
         hourly_cost_df = pd.read_excel(hourly_cost_file, sheet_name=hourly_cost_sheet_name)
@@ -76,7 +79,7 @@ if check_password():
         tracker_df.columns = tracker_df.iloc[4]
         tracker_df = tracker_df[5:]
         tracker_df.reset_index(drop=True, inplace=True)
-        tracker_df = tracker_df[["Employee Name", "Final Approval"]]
+        tracker_df = tracker_df[["Employee Name", "SES Y/N - recommend allowing to exceed tripwire"]]
 
         # Set the header row as the column names for Hourly Cost
         hourly_cost_df.columns = hourly_cost_df.iloc[6]
@@ -93,10 +96,10 @@ if check_password():
         hourly_cost_df["Name"] = hourly_cost_df["Name"].str.replace(r' [A-Z]\b', '', regex=True)
 
         # Filter Data
-        filtered_tripwire_df = tracker_df[tracker_df["Final Approval"] == "Y"]
+        filtered_tripwire_df = tracker_df[tracker_df["SES Y/N - recommend allowing to exceed tripwire"] == "Y"]
         names_above_tripwire = hourly_cost_df[hourly_cost_df["Above Tripwire Rate?"] == "Yes"]["Name"]
         names_allow_exceed_tripwire = filtered_tripwire_df[
-            filtered_tripwire_df["Final Approval"] == "Y"]["Employee Name"]
+            filtered_tripwire_df["SES Y/N - recommend allowing to exceed tripwire"] == "Y"]["Employee Name"]
         names_not_in_tripwire = names_above_tripwire[~names_above_tripwire.isin(names_allow_exceed_tripwire)]
 
         # Remove newline characters from the "PLC Desc" column in hourly_cost_df
