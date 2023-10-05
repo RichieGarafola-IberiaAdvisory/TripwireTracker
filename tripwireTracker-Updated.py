@@ -70,7 +70,7 @@ if check_password():
     if tracker_file is not None and hourly_cost_file is not None:
         # Check if the user has provided a sheet name for hourly_cost_df
         if not hourly_cost_sheet_name:
-        st.warning("Please enter the sheet name for the Hourly Cost Excel file.")
+            st.warning("Please enter the sheet name for the Hourly Cost Excel file.")
         else:
             # Read the uploaded Excel files into Pandas DataFrames
             tracker_df = pd.read_excel(tracker_file, sheet_name='Tripwire Tracker')
