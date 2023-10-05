@@ -87,6 +87,12 @@ if check_password():
             hourly_cost_df = hourly_cost_df[7:]
             hourly_cost_df.reset_index(drop=True, inplace=True)
             hourly_cost_df = hourly_cost_df[["Name", "PLC Desc", "Hourly Cost $/hr", "Above Tripwire Rate?"]]
+            
+            # Convert the "Hourly Cost $/hr" column to numeric (if it's not already)
+            hourly_cost_df["Hourly Cost $/hr"] = pd.to_numeric(hourly_cost_df["Hourly Cost $/hr"], errors="coerce")
+            
+            # Round the "Hourly Cost $/hr" column to two decimal places
+            hourly_cost_df["Hourly Cost $/hr"] = hourly_cost_df["Hourly Cost $/hr"].round(2)
     
             # Read LCAT Normalization data from Onboarding Tracker
             lcat_df = pd.read_excel(tracker_file, sheet_name='LCAT Normalization')
