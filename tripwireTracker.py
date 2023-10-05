@@ -68,57 +68,55 @@ if check_password():
     hourly_cost_sheet_name = st.text_input("Enter Hourly Cost Sheet Name:")
 
     if tracker_file is not None and hourly_cost_file is not None:
-        # Create a loading spinner widget to indicate data processing
-        with st.spinner("Processing data..."):
-            # Read the uploaded Excel files into Pandas DataFrames
-            tracker_df = pd.read_excel(tracker_file, sheet_name='Tripwire Tracker')
-            hourly_cost_df = pd.read_excel(hourly_cost_file, sheet_name=hourly_cost_sheet_name)
+        # Read the uploaded Excel files into Pandas DataFrames
+        tracker_df = pd.read_excel(tracker_file, sheet_name='Tripwire Tracker')
+        hourly_cost_df = pd.read_excel(hourly_cost_file, sheet_name=hourly_cost_sheet_name)
 
-            # Set the header row as the column names for Onboarding Tracker
-            tracker_df.columns = tracker_df.iloc[4]
-            tracker_df = tracker_df[5:]
-            tracker_df.reset_index(drop=True, inplace=True)
-            tracker_df = tracker_df[["Employee Name", "SES Y/N - recommend allowing to exceed tripwire"]]
+        # Set the header row as the column names for Onboarding Tracker
+        tracker_df.columns = tracker_df.iloc[4]
+        tracker_df = tracker_df[5:]
+        tracker_df.reset_index(drop=True, inplace=True)
+        tracker_df = tracker_df[["Employee Name", "SES Y/N - recommend allowing to exceed tripwire"]]
 
-            # Set the header row as the column names for Hourly Cost
-            hourly_cost_df.columns = hourly_cost_df.iloc[6]
-            hourly_cost_df = hourly_cost_df[7:]
-            hourly_cost_df.reset_index(drop=True, inplace=True)
-            hourly_cost_df = hourly_cost_df[["Name", "PLC Desc", "Hourly Cost $/hr", "Above Tripwire Rate?"]]
+        # Set the header row as the column names for Hourly Cost
+        hourly_cost_df.columns = hourly_cost_df.iloc[6]
+        hourly_cost_df = hourly_cost_df[7:]
+        hourly_cost_df.reset_index(drop=True, inplace=True)
+        hourly_cost_df = hourly_cost_df[["Name", "PLC Desc", "Hourly Cost $/hr", "Above Tripwire Rate?"]]
 
-            # Read LCAT Normalization data from Onboarding Tracker
-            lcat_df = pd.read_excel(tracker_file, sheet_name='LCAT Normalization')
-            lcat_df = lcat_df[["Vendor LCATs", "Correct LCAT Syntax"]]
+        # Read LCAT Normalization data from Onboarding Tracker
+        lcat_df = pd.read_excel(tracker_file, sheet_name='LCAT Normalization')
+        lcat_df = lcat_df[["Vendor LCATs", "Correct LCAT Syntax"]]
 
-            # Remove middle initials from names in both DataFrames
-            tracker_df["Employee Name"] = tracker_df["Employee Name"].str.replace(r' [A-Z]\b', '', regex=True)
-            hourly_cost_df["Name"] = hourly_cost_df["Name"].str.replace(r' [A-Z]\b', '', regex=True)
+        # Remove middle initials from names in both DataFrames
+        tracker_df["Employee Name"] = tracker_df["Employee Name"].str.replace(r' [A-Z]\b', '', regex=True)
+        hourly_cost_df["Name"] = hourly_cost_df["Name"].str.replace(r' [A-Z]\b', '', regex=True)
 
-            # Filter Data
-            filtered_tripwire_df = tracker_df[tracker_df["SES Y/N - recommend allowing to exceed tripwire"] == "Y"]
-            names_above_tripwire = hourly_cost_df[hourly_cost_df["Above Tripwire Rate?"] == "Yes"]["Name"]
-            names_allow_exceed_tripwire = filtered_tripwire_df[
-                filtered_tripwire_df["SES Y/N - recommend allowing to exceed tripwire"] == "Y"]["Employee Name"]
-            names_not_in_tripwire = names_above_tripwire[~names_above_tripwire.isin(names_allow_exceed_tripwire)]
+        # Filter Data
+        filtered_tripwire_df = tracker_df[tracker_df["SES Y/N - recommend allowing to exceed tripwire"] == "Y"]
+        names_above_tripwire = hourly_cost_df[hourly_cost_df["Above Tripwire Rate?"] == "Yes"]["Name"]
+        names_allow_exceed_tripwire = filtered_tripwire_df[
+            filtered_tripwire_df["SES Y/N - recommend allowing to exceed tripwire"] == "Y"]["Employee Name"]
+        names_not_in_tripwire = names_above_tripwire[~names_above_tripwire.isin(names_allow_exceed_tripwire)]
 
-            # Remove newline characters from the "PLC Desc" column in hourly_cost_df
-            hourly_cost_df["PLC Desc"] = hourly_cost_df["PLC Desc"].str.strip()
+        # Remove newline characters from the "PLC Desc" column in hourly_cost_df
+        hourly_cost_df["PLC Desc"] = hourly_cost_df["PLC Desc"].str.strip()
 
-            # Create a dictionary to map "Vendor LCATs" to "Correct LCAT Syntax"
-            lcat_mapping = lcat_df.set_index("Vendor LCATs")["Correct LCAT Syntax"].to_dict()
+        # Create a dictionary to map "Vendor LCATs" to "Correct LCAT Syntax"
+        lcat_mapping = lcat_df.set_index("Vendor LCATs")["Correct LCAT Syntax"].to_dict()
 
-            # Map the "PLC Desc" column in hourly_cost_df to get corrected LCAT syntax
-            hourly_cost_df["Correct LCAT Syntax"] = hourly_cost_df["PLC Desc"].map(lcat_mapping)
+        # Map the "PLC Desc" column in hourly_cost_df to get corrected LCAT syntax
+        hourly_cost_df["Correct LCAT Syntax"] = hourly_cost_df["PLC Desc"].map(lcat_mapping)
 
-            # Filter again
-            filtered_hourly_cost_df = hourly_cost_df[hourly_cost_df["Name"].isin(names_not_in_tripwire)]
+        # Filter again
+        filtered_hourly_cost_df = hourly_cost_df[hourly_cost_df["Name"].isin(names_not_in_tripwire)]
 
-            # Output
-            result_df = filtered_hourly_cost_df[["Name", "PLC Desc", "Correct LCAT Syntax", "Hourly Cost $/hr", "Above Tripwire Rate?"]]
+        # Output
+        result_df = filtered_hourly_cost_df[["Name", "PLC Desc", "Correct LCAT Syntax", "Hourly Cost $/hr", "Above Tripwire Rate?"]]
 
-            # Display the resulting DataFrame
-            st.subheader("Processed Data")
-            st.dataframe(result_df)
+        # Display the resulting DataFrame
+        st.subheader("Processed Data")
+        st.dataframe(result_df)
 
 #         # Input field for Excel file name
 #         excel_filename = st.text_input("Enter Excel File Name (without extension)", "filtered_hourly_cost")
