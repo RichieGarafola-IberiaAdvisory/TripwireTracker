@@ -74,10 +74,7 @@ if check_password():
 
         # Set the header row as the column names for Onboarding Tracker
         # Attempt to set the header row as the column names (with a fallback to another row)
-        try:
-            hourly_cost_df.columns = hourly_cost_df.iloc[6]
-        except KeyError:
-            hourly_cost_df.columns = hourly_cost_df.iloc[1]
+        hourly_cost_df.columns = hourly_cost_df.iloc[6]
         tracker_df = tracker_df[5:]
         tracker_df.reset_index(drop=True, inplace=True)
         tracker_df = tracker_df[["Employee Name", "SES Y/N - recommend allowing to exceed tripwire"]]
