@@ -77,6 +77,7 @@ if check_password():
         # tracker_df.columns = tracker_df.iloc[4]
 
         # Attempt to set the header row as the column names (with a fallback to another row)
+        
         valid_header_row_index = None  # Initialize a variable to store the valid header row index
         
         for i in range(len(tracker_df)):
@@ -86,7 +87,9 @@ if check_password():
                 valid_header_row_index = i
                 break
         
-        if valid_header_row_index is not None:
+        if valid_header_row_index is None:
+            st.error("Error: Valid column names not found in the Excel file.")
+        else:
             # Remove rows above the valid header row
             tracker_df = tracker_df.iloc[valid_header_row_index + 1:]
 
