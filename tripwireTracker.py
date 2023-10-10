@@ -73,12 +73,14 @@ if check_password():
         hourly_cost_df = pd.read_excel(hourly_cost_file, sheet_name=hourly_cost_sheet_name)
 
         # Set the header row as the column names for Onboarding Tracker     
-        
-        tracker_df.columns = tracker_df.iloc[4]
-        
-        tracker_df = tracker_df[5:]
-        tracker_df.reset_index(drop=True, inplace=True)
-        tracker_df = tracker_df[["Employee Name", "SES Y/N - recommend allowing to exceed tripwire"]]
+        try:
+            tracker_df.columns = tracker_df.iloc[4]
+            tracker_df = tracker_df[5:]
+            tracker_df.reset_index(drop=True, inplace=True)
+            tracker_df = tracker_df[["Employee Name", "SES Y/N - recommend allowing to exceed tripwire"]]
+        except KeyError as e:
+        # Inform the user to check if any tripwires are flagged
+        st.error(f"KeyError: {e}. Please check if any tripwires are flagged in the Excel files.")
 
         # Set the header row as the column names for Hourly Cost
         hourly_cost_df.columns = hourly_cost_df.iloc[6]
