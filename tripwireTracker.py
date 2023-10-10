@@ -72,9 +72,28 @@ if check_password():
         tracker_df = pd.read_excel(tracker_file, sheet_name='Tripwire Tracker')
         hourly_cost_df = pd.read_excel(hourly_cost_file, sheet_name=hourly_cost_sheet_name)
 
-        # Set the header row as the column names for Onboarding Tracker
+        # Set the header row as the column names for Onboarding Tracker     
+        
+        # tracker_df.columns = tracker_df.iloc[4]
+
         # Attempt to set the header row as the column names (with a fallback to another row)
-        tracker_df.columns = tracker_df.iloc[4]
+        valid_header_row_index = None  # Initialize a variable to store the valid header row index
+        
+        for i in range(len(tracker_df)):
+            header_row = tracker_df.iloc[i]
+            if "Employee Name" in header_row and "SES Y/N - recommend allowing to exceed tripwire" in header_row:
+                tracker_df.columns = header_row
+                valid_header_row_index = i
+                break
+        
+        if valid_header_row_index is not None:
+            # Remove rows above the valid header row
+            tracker_df = tracker_df.iloc[valid_header_row_index + 1:]
+
+
+        
+
+        
         tracker_df = tracker_df[5:]
         tracker_df.reset_index(drop=True, inplace=True)
         tracker_df = tracker_df[["Employee Name", "SES Y/N - recommend allowing to exceed tripwire"]]
