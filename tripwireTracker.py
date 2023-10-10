@@ -79,8 +79,8 @@ if check_password():
             tracker_df.reset_index(drop=True, inplace=True)
             tracker_df = tracker_df[["Employee Name", "SES Y/N - recommend allowing to exceed tripwire"]]
         except KeyError as e:
-        # Inform the user to check if any tripwires are flagged
-        st.error(f"KeyError: {e}. Please check if any tripwires are flagged in the Excel files.")
+            # Inform the user to check if any tripwires are flagged
+            st.error(f"KeyError: {e}. Please check if any tripwires are flagged in the Excel files.")
 
         # Set the header row as the column names for Hourly Cost
         hourly_cost_df.columns = hourly_cost_df.iloc[6]
