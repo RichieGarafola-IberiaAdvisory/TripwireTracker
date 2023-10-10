@@ -75,58 +75,64 @@ if check_password():
             # Read the uploaded Excel files into Pandas DataFrames
             tracker_df = pd.read_excel(tracker_file, sheet_name='Tripwire Tracker')
             hourly_cost_df = pd.read_excel(hourly_cost_file, sheet_name=hourly_cost_sheet_name)
+
+            try:
     
-            # Set the header row as the column names for Onboarding Tracker
-            tracker_df.columns = tracker_df.iloc[4]
-            tracker_df = tracker_df[5:]
-            tracker_df.reset_index(drop=True, inplace=True)
-            tracker_df = tracker_df[["Employee Name", "Final Approval"]]
-    
-            # Set the header row as the column names for Hourly Cost
-            hourly_cost_df.columns = hourly_cost_df.iloc[6]
-            hourly_cost_df = hourly_cost_df[7:]
-            hourly_cost_df.reset_index(drop=True, inplace=True)
-            hourly_cost_df = hourly_cost_df[["Name", "PLC Desc", "Hourly Cost $/hr", "Above Tripwire Rate?"]]
-            
-            # Convert the "Hourly Cost $/hr" column to numeric (if it's not already)
-            hourly_cost_df["Hourly Cost $/hr"] = pd.to_numeric(hourly_cost_df["Hourly Cost $/hr"], errors="coerce")
-            
-            # Round the "Hourly Cost $/hr" column to two decimal places
-            hourly_cost_df["Hourly Cost $/hr"] = hourly_cost_df["Hourly Cost $/hr"].round(2)
-    
-            # Read LCAT Normalization data from Onboarding Tracker
-            lcat_df = pd.read_excel(tracker_file, sheet_name='LCAT Normalization')
-            lcat_df = lcat_df[["Vendor LCATs", "Correct LCAT Syntax"]]
-    
-            # Remove middle initials from names in both DataFrames
-            tracker_df["Employee Name"] = tracker_df["Employee Name"].str.replace(r' [A-Z]\b', '', regex=True)
-            hourly_cost_df["Name"] = hourly_cost_df["Name"].str.replace(r' [A-Z]\b', '', regex=True)
-    
-            # Filter Data
-            filtered_tripwire_df = tracker_df[tracker_df["Final Approval"] == "Y"]
-            names_above_tripwire = hourly_cost_df[hourly_cost_df["Above Tripwire Rate?"] == "Yes"]["Name"]
-            names_allow_exceed_tripwire = filtered_tripwire_df[
-                filtered_tripwire_df["Final Approval"] == "Y"]["Employee Name"]
-            names_not_in_tripwire = names_above_tripwire[~names_above_tripwire.isin(names_allow_exceed_tripwire)]
-    
-            # Remove newline characters from the "PLC Desc" column in hourly_cost_df
-            hourly_cost_df["PLC Desc"] = hourly_cost_df["PLC Desc"].str.strip()
-    
-            # Create a dictionary to map "Vendor LCATs" to "Correct LCAT Syntax"
-            lcat_mapping = lcat_df.set_index("Vendor LCATs")["Correct LCAT Syntax"].to_dict()
-    
-            # Map the "PLC Desc" column in hourly_cost_df to get corrected LCAT syntax
-            hourly_cost_df["Correct LCAT Syntax"] = hourly_cost_df["PLC Desc"].map(lcat_mapping)
-    
-            # Filter again
-            filtered_hourly_cost_df = hourly_cost_df[hourly_cost_df["Name"].isin(names_not_in_tripwire)]
-    
-            # Output
-            result_df = filtered_hourly_cost_df[["Name", "PLC Desc", "Correct LCAT Syntax", "Hourly Cost $/hr", "Above Tripwire Rate?"]]
-    
-            # Display the resulting DataFrame
-            st.subheader("Processed Data")
-            st.dataframe(result_df)
+                # Set the header row as the column names for Onboarding Tracker
+                tracker_df.columns = tracker_df.iloc[4]
+                tracker_df = tracker_df[5:]
+                tracker_df.reset_index(drop=True, inplace=True)
+                tracker_df = tracker_df[["Employee Name", "Final Approval"]]
+        
+                # Set the header row as the column names for Hourly Cost
+                hourly_cost_df.columns = hourly_cost_df.iloc[6]
+                hourly_cost_df = hourly_cost_df[7:]
+                hourly_cost_df.reset_index(drop=True, inplace=True)
+                hourly_cost_df = hourly_cost_df[["Name", "PLC Desc", "Hourly Cost $/hr", "Above Tripwire Rate?"]]
+                
+                # Convert the "Hourly Cost $/hr" column to numeric (if it's not already)
+                hourly_cost_df["Hourly Cost $/hr"] = pd.to_numeric(hourly_cost_df["Hourly Cost $/hr"], errors="coerce")
+                
+                # Round the "Hourly Cost $/hr" column to two decimal places
+                hourly_cost_df["Hourly Cost $/hr"] = hourly_cost_df["Hourly Cost $/hr"].round(2)
+        
+                # Read LCAT Normalization data from Onboarding Tracker
+                lcat_df = pd.read_excel(tracker_file, sheet_name='LCAT Normalization')
+                lcat_df = lcat_df[["Vendor LCATs", "Correct LCAT Syntax"]]
+        
+                # Remove middle initials from names in both DataFrames
+                tracker_df["Employee Name"] = tracker_df["Employee Name"].str.replace(r' [A-Z]\b', '', regex=True)
+                hourly_cost_df["Name"] = hourly_cost_df["Name"].str.replace(r' [A-Z]\b', '', regex=True)
+        
+                # Filter Data
+                filtered_tripwire_df = tracker_df[tracker_df["Final Approval"] == "Y"]
+                names_above_tripwire = hourly_cost_df[hourly_cost_df["Above Tripwire Rate?"] == "Yes"]["Name"]
+                names_allow_exceed_tripwire = filtered_tripwire_df[
+                    filtered_tripwire_df["Final Approval"] == "Y"]["Employee Name"]
+                names_not_in_tripwire = names_above_tripwire[~names_above_tripwire.isin(names_allow_exceed_tripwire)]
+        
+                # Remove newline characters from the "PLC Desc" column in hourly_cost_df
+                hourly_cost_df["PLC Desc"] = hourly_cost_df["PLC Desc"].str.strip()
+        
+                # Create a dictionary to map "Vendor LCATs" to "Correct LCAT Syntax"
+                lcat_mapping = lcat_df.set_index("Vendor LCATs")["Correct LCAT Syntax"].to_dict()
+        
+                # Map the "PLC Desc" column in hourly_cost_df to get corrected LCAT syntax
+                hourly_cost_df["Correct LCAT Syntax"] = hourly_cost_df["PLC Desc"].map(lcat_mapping)
+        
+                # Filter again
+                filtered_hourly_cost_df = hourly_cost_df[hourly_cost_df["Name"].isin(names_not_in_tripwire)]
+        
+                # Output
+                result_df = filtered_hourly_cost_df[["Name", "PLC Desc", "Correct LCAT Syntax", "Hourly Cost $/hr", "Above Tripwire Rate?"]]
+        
+                # Display the resulting DataFrame
+                st.subheader("Processed Data")
+                st.dataframe(result_df)
+
+            except KeyError as e:
+                # Inform the user to check if any tripwires are flagged
+                st.error(f"Please check if any tripwires are flagged in the excel files.")                
 
         # Input field for Excel file name
         excel_filename = st.text_input("Enter Excel File Name (without extension)", "filtered_hourly_cost")
