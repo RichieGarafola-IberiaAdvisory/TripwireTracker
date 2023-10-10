@@ -74,28 +74,7 @@ if check_password():
 
         # Set the header row as the column names for Onboarding Tracker     
         
-        # tracker_df.columns = tracker_df.iloc[4]
-
-        # Attempt to set the header row as the column names (with a fallback to another row)
-        
-        valid_header_row_index = None  # Initialize a variable to store the valid header row index
-        
-        for i in range(len(tracker_df)):
-            header_row = tracker_df.iloc[i]
-            if "Employee Name" in header_row and "SES Y/N - recommend allowing to exceed tripwire" in header_row:
-                tracker_df.columns = header_row
-                valid_header_row_index = i
-                break
-        
-        if valid_header_row_index is None:
-            st.error("Error: Valid column names not found in the Excel file.")
-        else:
-            # Remove rows above the valid header row
-            tracker_df = tracker_df.iloc[valid_header_row_index + 1:]
-
-
-        
-
+        tracker_df.columns = tracker_df.iloc[4]
         
         tracker_df = tracker_df[5:]
         tracker_df.reset_index(drop=True, inplace=True)
