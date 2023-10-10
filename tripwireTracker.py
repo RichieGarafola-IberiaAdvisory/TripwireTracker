@@ -119,7 +119,7 @@ if check_password():
             st.dataframe(result_df)
         except KeyError as e:
             # Inform the user to check if any tripwires are flagged
-            st.error(f"KeyError: {e}. Please check if any tripwires are flagged in the excel files.")
+            st.error(f"Please check if any tripwires are flagged in the excel files.")
 
 #         # Input field for Excel file name
 #         excel_filename = st.text_input("Enter Excel File Name (without extension)", "filtered_hourly_cost")
