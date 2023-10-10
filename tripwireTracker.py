@@ -75,7 +75,7 @@ if check_password():
         # Set the header row as the column names for Onboarding Tracker
         # Attempt to set the header row as the column names (with a fallback to another row)
         try:
-            hourly_cost_df.columns = hourly_cost_df.iloc[4]
+            hourly_cost_df.columns = hourly_cost_df.iloc[6]
         except KeyError:
             hourly_cost_df.columns = hourly_cost_df.iloc[1]
         tracker_df = tracker_df[5:]
