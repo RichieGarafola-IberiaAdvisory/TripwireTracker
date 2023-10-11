@@ -62,30 +62,29 @@ if check_password():
     # Streamlit UI
     st.title('Tripwire Tracker App')
 
-    # Upload Onboarding Tracker Excel file
-    st.write("This application is a tool for tracking and analyzing data from the Onboarding Tracker and Hourly Cost Excel files.")
-    st.write("The Onboarding Tracker file can be found in the following subdirectory 'Restored FMO1', 'Onboarding', select the latest tracker file.")
-    st.write("The Hourly Cost data will be emailed.")
-    st.write("Upload the two Excel files Onboarding Tracker and the Hourly Cost file.")
-    st.write("Use the 'Upload Onboarding Tracker Excel File' and 'Upload Hourly Cost Excel File' buttons to upload these files respectively.")
-    st.write("Make sure the Hourly Cost file has the specific sheet name you want to work with.")
-    st.write("Typically the sheet name is 'Hourly Cost_TO29OY1_BVN00XX'; however, this should be checked prior to running to ensure the file is read in correctly.")
+    # Sidebar instructions
+    if st.sidebar.checkbox("Show Instructions"):
+        st.write("This application is a tool for tracking and analyzing data from the Onboarding Tracker and Hourly Cost Excel files.")
+        st.write("The Onboarding Tracker file can be found in the following subdirectory 'Restored FMO1', 'Onboarding', select the latest tracker file.")
+        st.write("The Hourly Cost data will be emailed.")
+        st.write("Upload the two Excel files Onboarding Tracker and the Hourly Cost file.")
+        st.write("Use the 'Upload Onboarding Tracker Excel File' and 'Upload Hourly Cost Excel File' buttons to upload these files respectively.")
+        st.write("Make sure the Hourly Cost file has the specific sheet name you want to work with.")
+        st.write("Typically the sheet name is 'Hourly Cost_TO29OY1_BVN00XX'; however, this should be checked prior to running to ensure the file is read in correctly.")
+        
+        st.write("After uploading the files, the application processes the data. It performs the following tasks:")
+        st.write("- Extracts relevant columns from both files.")
+        st.write("- Normalizes employee names by removing middle initials.")
+        st.write("- Filters employees who have 'Final Approval' in the Onboarding Tracker.")
+        st.write("- Determines which employees are above the 'Tripwire Rate' in the Hourly Cost file.")
+        st.write("- Maps 'PLC Desc' to 'Correct LCAT Syntax' using data from the Onboarding Tracker.")
+        st.write("Finally, it presents a DataFrame with processed data in a table format under the 'Processed Data' section.")
 
-    # Data processing instructions
-    st.write("After uploading the files, the application processes the data. It performs the following tasks:")
-    st.write("- Extracts relevant columns from both files.")
-    st.write("- Normalizes employee names by removing middle initials.")
-    st.write("- Filters employees who have 'Final Approval' in the Onboarding Tracker.")
-    st.write("- Determines which employees are above the 'Tripwire Rate' in the Hourly Cost file.")
-    st.write("- Maps 'PLC Desc' to 'Correct LCAT Syntax' using data from the Onboarding Tracker.")
-    st.write("Finally, it presents a DataFrame with processed data in a table format under the 'Processed Data' section.")
-
-    # Saving processed data instructions
-    st.write("If you want to save the processed data to an Excel file, you can:")
-    st.write("- Enter a name for the Excel file in the 'Enter Excel File Name (without extension)' text field.")
-    st.write("- Click the 'Save Data to Excel' button.")
-    st.write("This will generate a download link for the Excel file. Click on the link to download the processed data.")
-    st.write("The file will be saved to the Downloads folder by default.")
+        st.write("If you want to save the processed data to an Excel file, you can:")
+        st.write("- Enter a name for the Excel file in the 'Enter Excel File Name (without extension)' text field.")
+        st.write("- Click the 'Save Data to Excel' button.")
+        st.write("This will generate a download link for the Excel file. Click on the link to download the processed data.")
+        st.write("The file will be saved to the Downloads folder by default.")
     
     # Upload Onboarding Tracker Excel file
     tracker_file = st.file_uploader("Upload Onboarding Tracker Excel File", type=["xlsx"])
