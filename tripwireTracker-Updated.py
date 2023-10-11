@@ -63,7 +63,7 @@ if check_password():
     st.title('Tripwire Tracker App')
 
     # Sidebar instructions
-    if st.sidebar.checkbox("Show Instructions"):
+    if st.sidebar.checkbox("Instructions"):
         st.write("This application is a tool for tracking and analyzing data from the Onboarding Tracker and Hourly Cost Excel files.")
         st.write("The Onboarding Tracker file can be found in the following subdirectory 'Restored FMO1', 'Onboarding', select the latest tracker file.")
         st.write("The Hourly Cost data will be emailed.")
